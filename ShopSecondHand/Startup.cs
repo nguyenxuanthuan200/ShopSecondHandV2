@@ -25,6 +25,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using ShopSecondHand.Repository.AuthenRepository;
+using ShopSecondHand.Repository.PostRepository;
 
 namespace ShopSecondHand
 {
@@ -59,6 +60,8 @@ namespace ShopSecondHand
             services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
 
             services.AddScoped<IAuthenRepository, AuthenRepository>();
+
+            services.AddScoped<IPostRepository, PostRepository>();
 
 
             // Cors
