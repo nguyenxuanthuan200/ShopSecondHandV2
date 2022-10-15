@@ -106,14 +106,14 @@ namespace ShopSecondHand.Repository.PostRepository
                 return null;
 
             IEnumerable<GetPostWithProductResponse> result = (IEnumerable<GetPostWithProductResponse>)getByPostId.Select(
-                  x =>
+                 async x =>
                  {
                      Product product =  dbContext.Products.SingleOrDefault(p => p.Id == x.Id);
                      var map = _mapper.Map<GetPostWithProductResponse>(x);
                      var mapProduct = _mapper.Map<GetProductResponse>(product);
                      map.Product = mapProduct;
                  }
-                ).ToList() as IEnumerable<GetPostWithProductResponse>;
+                ).ToList();
             return result;
         }
 
