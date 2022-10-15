@@ -42,7 +42,7 @@ namespace ShopSecondHand.Repository.AuthenRepository
                     new Claim("Id", account.Id.ToString())
                     };
 
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtConfig:Key"]));
 
                 var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 

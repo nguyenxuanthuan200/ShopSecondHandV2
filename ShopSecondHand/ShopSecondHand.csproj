@@ -39,7 +39,6 @@
   <ItemGroup>
     <Folder Include="Data\RequestModels\WalletRequest\" />
     <Folder Include="Data\RequestModels\TransactionRequest\" />
-    <Folder Include="Data\RequestModels\PostRequest\" />
   </ItemGroup>
 
 </Project>

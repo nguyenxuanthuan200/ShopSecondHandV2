@@ -25,6 +25,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using ShopSecondHand.Repository.AuthenRepository;
+using ShopSecondHand.Repository.PostRepository;
 
 namespace ShopSecondHand
 {
@@ -60,6 +61,8 @@ namespace ShopSecondHand
 
             services.AddScoped<IAuthenRepository, AuthenRepository>();
 
+            services.AddScoped<IPostRepository, PostRepository>();
+
 
             // Cors
             services.AddCors(opt => opt.AddDefaultPolicy(builder => builder.AllowAnyOrigin()
@@ -94,12 +97,12 @@ namespace ShopSecondHand
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             // Config
-            services.Configure<JwtConfig>(Configuration.GetSection("Jwt"));
+            services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
             // Disable ModelStateInvalidFilter
-            services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.SuppressModelStateInvalidFilter = true;
-            });
+            //services.Configure<ApiBehaviorOptions>(options =>
+            //{
+            //    options.SuppressModelStateInvalidFilter = true;
+            //});
 
 
             services.AddControllers()
@@ -123,11 +126,11 @@ namespace ShopSecondHand
                        ValidateIssuer = false,
                        ValidateAudience = false,
                        RequireExpirationTime = true,
-                       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtConfig:Key"]))
                    };
                });
 
-            services.Configure<JwtConfig>(Configuration.GetSection("Jwt"));
+           // services.Configure<JwtConfig>(Configuration.GetSection("Jwt"));
 
             services.AddSwaggerGen(c =>
             {
