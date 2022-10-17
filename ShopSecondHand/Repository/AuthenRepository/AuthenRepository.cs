@@ -30,7 +30,9 @@ namespace ShopSecondHand.Repository.AuthenRepository
 
         public async Task<Token> GenerateToken(Account account)
         {
+            System.Diagnostics.Debug.WriteLine("chet ti");
             var roleName = await dbContext.Roles.SingleOrDefaultAsync(p => p.Id == account.RoleId);
+
             if (roleName.Name.Equals("ADMIN"))
             {
                 var claims = new[]
@@ -56,6 +58,7 @@ namespace ShopSecondHand.Repository.AuthenRepository
             }
             else
             {
+                System.Diagnostics.Debug.WriteLine("quy xu");
                 var claims = new[]
                 {
                     new Claim(ClaimTypes.Role, "User"),
@@ -64,13 +67,13 @@ namespace ShopSecondHand.Repository.AuthenRepository
                     new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
                     new Claim("Id",account.Id.ToString())
                     };
-
+                System.Diagnostics.Debug.WriteLine("sau cliam");
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtConfig:Key"]));
-
+                System.Diagnostics.Debug.WriteLine("sau key");
                 var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
+                System.Diagnostics.Debug.WriteLine("sau signin");
                 var token = new JwtSecurityToken(_configuration["JwtConfig:Issuer"], _configuration["JwtConfig:Audience"], claims, expires: DateTime.UtcNow.AddMinutes(120), signingCredentials: signIn);
-
+                System.Diagnostics.Debug.WriteLine("sau token");
 
                 var result = _mapper.Map<Token>(account);
 

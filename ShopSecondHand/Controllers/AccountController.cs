@@ -142,11 +142,9 @@ namespace ShopSecondHand.Controllers
                 {
                     return CustomResult("Account da ton tai", HttpStatusCode.Accepted);
                 }
-                //var login = new LoginRequest(request.UserName, request.Password);
-                //var result = _mapper.Map<CreateAccountResponse>(create);
-               // var account = await authenRepository.LoginByUserNameAndPassword(login);
-               // var result = await authenRepository.GenerateToken(account);
-                return CustomResult("Success", create, HttpStatusCode.Created);
+                var result = await authenRepository.GenerateToken(create);
+                return CustomResult("Success", result, HttpStatusCode.Created);
+
             }
             catch (Exception)
             {

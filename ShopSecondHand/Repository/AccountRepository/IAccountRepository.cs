@@ -11,7 +11,7 @@ namespace ShopSecondHand.Repository.AccountRepository
     public interface IAccountRepository 
     {
         Task<IEnumerable<GetAccountResponse>> GetAccount();
-        Task<CreateAccountResponse> CreateAccountWithWallet(CreateAccountRequest userRequest);
+        Task<Account> CreateAccountWithWallet(CreateAccountRequest userRequest);
         //Task<CreateAccountResponse> CreateAccount(CreateAccountRequest userRequest);
         Task<UpdateAccountResponse> UpdateAccount(Guid id, UpdateAccountRequest request);
         void DeleteAccount(Guid id);

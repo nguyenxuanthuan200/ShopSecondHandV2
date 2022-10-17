@@ -82,7 +82,7 @@ namespace ShopSecondHand.Repository.AccountRepository
             }
             return null;
         }
-        public async Task<CreateAccountResponse> CreateAccountWithWallet(CreateAccountRequest userRequest)
+        public async Task<Account> CreateAccountWithWallet(CreateAccountRequest userRequest)
         {
             var user = await dbContext.Accounts
                  .SingleOrDefaultAsync(p => p.UserName.Equals(userRequest.UserName));
@@ -113,10 +113,10 @@ namespace ShopSecondHand.Repository.AccountRepository
             }
             dbContext.Accounts.AddAsync(userr);
             dbContext.Wallets.AddAsync(wallet);
-            dbContext.SaveChangesAsync();
-            var re = _mapper.Map<CreateAccountResponse>(userr);
+            await dbContext.SaveChangesAsync();
+            //var re =  _mapper.Map<CreateAccountResponse>(userr);
            // var re = authenRepository.GenerateToken(userr);
-            return re;
+            return userr;
         }
    
 
