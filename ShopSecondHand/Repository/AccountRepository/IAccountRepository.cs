@@ -1,5 +1,6 @@
 ﻿using ShopSecondHand.Data.RequestModels.AccountRequest;
 using ShopSecondHand.Data.ResponseModels.AccountResponse;
+using ShopSecondHand.Data.ResponseModels.AuthenResponse;
 using ShopSecondHand.Models;
 using System;
 using System.Collections.Generic;

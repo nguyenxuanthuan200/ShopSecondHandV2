@@ -15,5 +15,7 @@ namespace ShopSecondHand.Repository.PostRepository
         Task<UpdatePostResponse> UpdatePost(Guid id, UpdatePostRequest request);
         void Delete(Guid id);
 
+        Task<IEnumerable<GetPostWithProductResponse>> SortPostByName(string name);
+
     }
 }

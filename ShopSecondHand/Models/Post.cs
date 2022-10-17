@@ -20,7 +20,7 @@ namespace ShopSecondHand.Models
         public Guid? AccountId { get; set; }
         public DateTime? CreateAt { get; set; }
         public DateTime? LastUpdateAt { get; set; }
-        public int? Price { get; set; }
+        public float? Price { get; set; }
         public Guid? BuildingId { get; set; }
 
         public virtual Building Building { get; set; }

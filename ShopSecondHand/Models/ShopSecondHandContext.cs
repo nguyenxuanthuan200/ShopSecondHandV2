@@ -168,13 +168,13 @@ namespace ShopSecondHand.Models
 
                 entity.Property(e => e.BuildingId).HasColumnName("BuildingID");
 
-                entity.Property(e => e.CreateAt).HasColumnType("date");
+                entity.Property(e => e.CreateAt).HasColumnType("datetime");
 
                 entity.Property(e => e.Description).HasMaxLength(255);
 
                 entity.Property(e => e.ImageUrl).HasMaxLength(255);
 
-                entity.Property(e => e.LastUpdateAt).HasColumnType("date");
+                entity.Property(e => e.LastUpdateAt).HasColumnType("datetime");
 
                 entity.Property(e => e.Title).HasMaxLength(50);
 

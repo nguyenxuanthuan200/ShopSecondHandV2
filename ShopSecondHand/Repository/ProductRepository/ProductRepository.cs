@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using ShopSecondHand.Data.RequestModels.ProductRequest;
+using ShopSecondHand.Data.ResponseModels.PostResponse;
 using ShopSecondHand.Data.ResponseModels.ProductResponse;
 using ShopSecondHand.Models;
 using System;
@@ -58,17 +59,18 @@ namespace ShopSecondHand.Repository.ProductRepository
             var get = await dbContext.Products.ToListAsync();
             IEnumerable<GetProductResponse> result = get.Select(
                 x =>
-                {
-                    return new GetProductResponse()
-                    {
-                        Id = x.Id,
-                        Name = x.Name,
-                        Description = x.Description,
-                        Price = x.Price,
-                        Quantity = x.Quantity,
-                        CategoryId = x.CategoryId,
-                    };
-                }
+                //{
+                //    return new GetProductResponse()
+                //    {
+                //        Id = x.Id,
+                //        Name = x.Name,
+                //        Description = x.Description,
+                //        Price = x.Price,
+                //        Quantity = x.Quantity,
+                //        CategoryId = x.CategoryId,
+                //    };
+                //}
+                _mapper.Map<GetProductResponse>(x)
                 ).ToList();
             return result;
         }
@@ -79,36 +81,45 @@ namespace ShopSecondHand.Repository.ProductRepository
                 .FirstOrDefaultAsync(p => p.Id == id);
             if (getById != null)
             {
-                var re = new GetProductResponse()
-                {
-                    Id = getById.Id,
-                    Name = getById.Name,
-                    Description = getById.Description,
-                    Price = getById.Price,
-                    Quantity = getById.Quantity,
-                    CategoryId = getById.CategoryId,
-                };
-                return re;
+                //var re = new GetProductResponse()
+                //{
+                //    Id = getById.Id,
+                //    Name = getById.Name,
+                //    Description = getById.Description,
+                //    Price = getById.Price,
+                //    Quantity = getById.Quantity,
+                //    CategoryId = getById.CategoryId,
+                //};
+                return _mapper.Map<GetProductResponse>(getById);
+               // return re;
             }
             return null;
         }
 
         public async Task<IEnumerable<GetProductResponse>> GetProductByName(string name)
         {
-            var get = await dbContext.Products.ToListAsync();
+            var get =  dbContext.Products.AsQueryable();
+            if (!string.IsNullOrEmpty(name))
+            {
+                get=get.Where(p => p.Name.Contains(name));
+            }
+
+            
             IEnumerable<GetProductResponse> result = get.Select(
                 x =>
-                {
-                    return new GetProductResponse()
-                    {
-                        Id = x.Id,
-                        Name = x.Name,
-                        Description = x.Description,
-                        Price = x.Price,
-                        Quantity = x.Quantity,
-                        CategoryId = x.CategoryId,
-                    };
-                }
+                //{
+                //    return new GetProductResponse()
+                //    {
+                //        Id = x.Id,
+                //        Name = x.Name,
+                //        Description = x.Description,
+                //        Price = x.Price,
+                //        Quantity = x.Quantity,
+                //        CategoryId = x.CategoryId,
+                //    };
+                //}
+                //)
+                 _mapper.Map<GetProductResponse>(x)
                 ).ToList();
             return result;
         }
@@ -119,17 +130,7 @@ namespace ShopSecondHand.Repository.ProductRepository
 
             IEnumerable<GetProductResponse> result = userByBuilding.Select(
                 x =>
-                {
-                    return new GetProductResponse()
-                    {
-                        Id = x.Id,
-                        Name = x.Name,
-                        Description = x.Description,
-                        Price = x.Price,
-                        Quantity = x.Quantity,
-                        CategoryId = x.CategoryId,
-                    };
-                }
+                _mapper.Map<GetProductResponse>(x)
                 ).ToList();
             return result;
         }
@@ -145,11 +146,17 @@ namespace ShopSecondHand.Repository.ProductRepository
             up.Price = request.Price;
             up.Quantity = request.Quantity;
             up.CategoryId = request.CategoryId;
+            //up=_mapper.Map<Product>(request);
             dbContext.Products.Update(up);
             await dbContext.SaveChangesAsync();
 
             var upResult = _mapper.Map<UpdateProductResponse>(up);
             return upResult;
+        }
+
+        public Task<IEnumerable<GetPostWithProductResponse>> SortProductByName(string name)
+        {
+            throw new NotImplementedException();
         }
     }
 }

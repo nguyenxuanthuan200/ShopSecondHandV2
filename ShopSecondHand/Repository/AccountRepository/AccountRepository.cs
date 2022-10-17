@@ -2,8 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using ShopSecondHand.Data.RequestModels.AccountRequest;
 using ShopSecondHand.Data.ResponseModels.AccountResponse;
+using ShopSecondHand.Data.ResponseModels.AuthenResponse;
 using ShopSecondHand.Data.ResponseModels.WalletResponse;
 using ShopSecondHand.Models;
+using ShopSecondHand.Repository.AuthenRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +17,13 @@ namespace ShopSecondHand.Repository.AccountRepository
     {
         private readonly ShopSecondHandContext dbContext;
         private readonly IMapper _mapper;
+        private readonly IAuthenRepository authenRepository;
 
-        public AccountRepository(ShopSecondHandContext dbContext, IMapper mapper)
+        public AccountRepository(ShopSecondHandContext dbContext, IMapper mapper, IAuthenRepository authenRepository)
         {
             this.dbContext = dbContext;
             _mapper = mapper;
+            this.authenRepository = authenRepository;
         }
         public async Task<IEnumerable<GetAccountResponse>> GetAccountByBuildingId(Guid id)
         {
@@ -111,6 +115,7 @@ namespace ShopSecondHand.Repository.AccountRepository
             dbContext.Wallets.AddAsync(wallet);
             dbContext.SaveChangesAsync();
             var re = _mapper.Map<CreateAccountResponse>(userr);
+           // var re = authenRepository.GenerateToken(userr);
             return re;
         }
    
@@ -159,8 +164,12 @@ namespace ShopSecondHand.Repository.AccountRepository
 
             if (upUser == null) return null;
             if (id != userRequest.Id) return null;
-
-            upUser.Password = userRequest.Password;
+            if (!string.IsNullOrEmpty(userRequest.Password))
+            {
+                var hashPassword = BCrypt.Net.BCrypt.EnhancedHashPassword(userRequest.Password);
+                upUser.Password = hashPassword;
+            }
+           // upUser.Password = userRequest.Password;
             upUser.FullName = userRequest.FullName;
             upUser.Description = userRequest.Description;
             upUser.Phone = userRequest.Phone;
