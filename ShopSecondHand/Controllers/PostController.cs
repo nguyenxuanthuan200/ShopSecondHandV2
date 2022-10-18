@@ -38,6 +38,24 @@ namespace ShopSecondHand.Controllers
 
             }
         }
+        [HttpGet("catecorys")]
+        public async Task<IActionResult> GetPostByCategoryId(Guid id)
+        {
+            try
+            {
+                var result = await postRepository.GetPostByCategoryId(id);
+                if (result == null)
+                {
+                    return CustomResult("Not Found", HttpStatusCode.NotFound);
+                }
+                return CustomResult("Success", result, HttpStatusCode.OK);
+            }
+            catch (Exception)
+            {
+                return CustomResult("Fail", HttpStatusCode.InternalServerError);
+
+            }
+        }
         [HttpGet]
         public async Task<IActionResult> GetPost()
         {

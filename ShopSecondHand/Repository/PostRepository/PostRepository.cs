@@ -118,24 +118,35 @@ namespace ShopSecondHand.Repository.PostRepository
             return result;
         }
 
+        public async Task<IEnumerable<GetPostWithProductResponse>> GetPostByCategoryId(Guid id)
+        {
+            var listProduct = await dbContext.Products
+                 .Where(p => p.CategoryId == id).ToListAsync();
+
+            //IEnumerable<GetPostWithProductResponse> result = listProduct.Select(
+            //    x =>
+            //    {
+            //        var a= GetPostById(x.Id);
+            //    }
+            //    ).ToList();
+            List<GetPostWithProductResponse> list=new List<GetPostWithProductResponse>();
+            foreach (var x in listProduct)
+            {
+                var post = await GetPostById(x.Id);
+                if(post != null)
+                list.Add(post);
+            }
+            return list;
+        }
+
         public async Task<GetPostWithProductResponse> GetPostById(Guid id)
         {
-            var getById = await dbContext.Posts.Where(p => p.Status == 1)
-                .SingleOrDefaultAsync(p => p.Id == id);
-
+            var getById = await dbContext.Posts.Where(p=>p.Id==id && p.Status==1)
+                .SingleOrDefaultAsync();
             var product = await dbContext.Products
                 .SingleOrDefaultAsync(p => p.Id == id);
             if (getById != null)
             {
-                // var Transaction = _mapper.Map<TransactionDTO>(transaction);
-                //var re = new GetPostWithProductResponse()
-                //{
-                //    Id = getById.Id,
-                //    PostId = getById.PostId,
-                //    AccountId = getById.AccountId,
-                //    Total = getById.Total,
-                //    Product = product
-                //};
                 var map = _mapper.Map<GetPostWithProductResponse>(getById);
                 var mapProduct = _mapper.Map<GetProductResponse>(product);
                 map.Product = mapProduct;
@@ -192,6 +203,7 @@ namespace ShopSecondHand.Repository.PostRepository
             up.Description = request.PostDescription;
             up.ImageUrl = request.ImageUrl;
             up.Price = request.Price;
+            up.LastUpdateAt= DateTime.Now;
             up.BuildingId = request.BuildingId;
             dbContext.Posts.Update(up);
 

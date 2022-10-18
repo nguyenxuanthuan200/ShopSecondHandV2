@@ -11,6 +11,7 @@ namespace ShopSecondHand.Repository.PostRepository
         Task<IEnumerable<GetPostWithProductResponse>> GetPost();
         Task<GetPostWithProductResponse> GetPostById(Guid id);
         Task<IEnumerable<GetPostWithProductResponse>> GetPostByAccountId(Guid id);
+        Task<IEnumerable<GetPostWithProductResponse>> GetPostByCategoryId(Guid id);
         Task<CreatePostResponse> CreatePost(CreatePostRequest request);
         Task<UpdatePostResponse> UpdatePost(Guid id, UpdatePostRequest request);
         void Delete(Guid id);
