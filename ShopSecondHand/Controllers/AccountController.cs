@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using CoreApiResponse;
+﻿using CoreApiResponse;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,9 +6,12 @@ using ShopSecondHand.Data.Common;
 using ShopSecondHand.Data.RequestModels.AccountRequest;
 using ShopSecondHand.Data.ResponseModels.AccountResponse;
 using ShopSecondHand.Repository.AccountRepository;
+using ShopSecondHand.Models;
+using ShopSecondHand.Repository.AuthenRepository;
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using ShopSecondHand.Data.RequestModels.AuthenRequest;
 
 namespace ShopSecondHand.Controllers
 {
@@ -18,10 +20,12 @@ namespace ShopSecondHand.Controllers
     public class AccountController : BaseController
     {
         private readonly IAccountRepository accountRepository;
-        public AccountController(IAccountRepository accountRepository)
+        private readonly IAuthenRepository authenRepository;
+        public AccountController(IAccountRepository accountRepository, IAuthenRepository authenRepository)
         {
             {
                 this.accountRepository = accountRepository;
+                this.authenRepository=authenRepository;
             }
 
         }
@@ -138,8 +142,9 @@ namespace ShopSecondHand.Controllers
                 {
                     return CustomResult("Account da ton tai", HttpStatusCode.Accepted);
                 }
-                //var result = _mapper.Map<CreateAccountResponse>(create);
-                return CustomResult("Success", create, HttpStatusCode.Created);
+                var result = await authenRepository.GenerateToken(create);
+                return CustomResult("Success", result, HttpStatusCode.Created);
+
             }
             catch (Exception)
             {

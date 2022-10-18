@@ -1,17 +1,11 @@
 ﻿using CoreApiResponse;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using ShopSecondHand.Data.RequestModels.AuthenRequest;
-using ShopSecondHand.Models;
 using ShopSecondHand.Repository.AuthenRepository;
 using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.Net;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Controllers.AuthenticationController
@@ -21,13 +15,11 @@ namespace Controllers.AuthenticationController
     public class AunthenticationController : BaseController
     {
         public IConfiguration _configuration;
-        private readonly ShopSecondHandContext _context;
         private readonly IAuthenRepository _authenRepository;
 
-        public AunthenticationController(IConfiguration configuration, ShopSecondHandContext context, IAuthenRepository authenRepository)
+        public AunthenticationController(IConfiguration configuration, IAuthenRepository authenRepository)
         {
             _configuration = configuration;
-            _context = context;
             _authenRepository = authenRepository;
         }
 

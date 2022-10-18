@@ -1,4 +1,5 @@
 ﻿using ShopSecondHand.Data.RequestModels.ProductRequest;
+using ShopSecondHand.Data.ResponseModels.PostResponse;
 using ShopSecondHand.Data.ResponseModels.ProductResponse;
 using System;
 using System.Collections.Generic;
@@ -15,5 +16,7 @@ namespace ShopSecondHand.Repository.ProductRepository
         Task<CreateProductResponse> CreateProduct(CreateProductRequest request);
         Task<UpdateProductResponse> UpdateProduct(Guid id, UpdateProductRequest request);
         void DeleteProduct(Guid id);
+
+        Task<IEnumerable<GetPostWithProductResponse>> SortProductByName(string name);
     }
 }

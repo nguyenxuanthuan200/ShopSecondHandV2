@@ -4,6 +4,7 @@ using ShopSecondHand.Data.RequestModels.PostRequest;
 using ShopSecondHand.Data.ResponseModels.PostResponse;
 using ShopSecondHand.Data.ResponseModels.ProductResponse;
 using ShopSecondHand.Models;
+using ShopSecondHand.Repository.ProductRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +16,13 @@ namespace ShopSecondHand.Repository.PostRepository
     {
         private readonly ShopSecondHandContext dbContext;
         private readonly IMapper _mapper;
+        private readonly IProductRepository productRepository;
 
-        public PostRepository(ShopSecondHandContext dbContext, IMapper mapper)
+        public PostRepository(ShopSecondHandContext dbContext, IMapper mapper, IProductRepository productRepository)
         {
             this.dbContext = dbContext;
             _mapper = mapper;
+            this.productRepository = productRepository;
         }
         public async Task<CreatePostResponse> CreatePost(CreatePostRequest request)
         {
@@ -74,73 +77,119 @@ namespace ShopSecondHand.Repository.PostRepository
         {
             var post = await dbContext.Posts.Where(p=>p.Status==1).ToListAsync();
             if (post == null) return null;
-            IEnumerable<GetPostWithProductResponse> result = (IEnumerable<GetPostWithProductResponse>)post.Select(
-                 async x =>
+            IEnumerable<GetPostWithProductResponse> result = post.Select(
+                  x =>
                {
-                   Product product = await dbContext.Products.SingleOrDefaultAsync(p => p.Id == x.Id);
-                   var map = _mapper.Map<GetPostWithProductResponse>(x);
-                   var mapProduct = _mapper.Map<GetProductResponse>(product);
-                   map.Product = mapProduct;
-                   //return new GetPostResponse()
-                   //{
-                   //    Id = x.Id,
-                   //    Title = x.Title,
-                   //    Description = x.Description,
-                   //    ImageUrl = x.ImageUrl,
-                   //    AccountId=x.AccountId,
-                   //    CreateAt=x.CreateAt,
-                   //    LastUpdateAt=x.LastUpdateAt,
-                   //    BuildingId=x.BuildingId
-                   //};
+                   return _mapper.Map<GetPostWithProductResponse>(x);
 
                }
                 ).ToList();
+            foreach (var temp in result)
+            {
+                var product = await productRepository.GetProductById(temp.Id);
+                var mapProduct = _mapper.Map<GetProductResponse>(product);
+                temp.Product = mapProduct;
+            }
+
             return result;
         }
 
         public async Task<IEnumerable<GetPostWithProductResponse>> GetPostByAccountId(Guid id)
         {
             var getByPostId = await dbContext.Posts
-               .Where(p => p.AccountId == id).Where(p => p.Status == 1).ToListAsync();
+               .Where(p => p.AccountId == id && p.Status==1).ToListAsync();
             if (getByPostId == null)
                 return null;
 
-            IEnumerable<GetPostWithProductResponse> result = (IEnumerable<GetPostWithProductResponse>)getByPostId.Select(
-                 async x =>
-                 {
-                     Product product =  dbContext.Products.SingleOrDefault(p => p.Id == x.Id);
-                     var map = _mapper.Map<GetPostWithProductResponse>(x);
-                     var mapProduct = _mapper.Map<GetProductResponse>(product);
-                     map.Product = mapProduct;
-                 }
+            IEnumerable<GetPostWithProductResponse> result = getByPostId.Select(
+                  x =>
+                  {
+                      return _mapper.Map<GetPostWithProductResponse>(x);
+
+                  }
                 ).ToList();
+            foreach (var temp in result)
+            {
+                var product = await productRepository.GetProductById(temp.Id);
+                var mapProduct = _mapper.Map<GetProductResponse>(product);
+                temp.Product = mapProduct;
+            }
+
             return result;
+        }
+
+        public async Task<IEnumerable<GetPostWithProductResponse>> GetPostByCategoryId(Guid id)
+        {
+            var listProduct = await dbContext.Products
+                 .Where(p => p.CategoryId == id).ToListAsync();
+
+            //IEnumerable<GetPostWithProductResponse> result = listProduct.Select(
+            //    x =>
+            //    {
+            //        var a= GetPostById(x.Id);
+            //    }
+            //    ).ToList();
+            List<GetPostWithProductResponse> list=new List<GetPostWithProductResponse>();
+            foreach (var x in listProduct)
+            {
+                var post = await GetPostById(x.Id);
+                if(post != null)
+                list.Add(post);
+            }
+            return list;
         }
 
         public async Task<GetPostWithProductResponse> GetPostById(Guid id)
         {
-            var getById = await dbContext.Posts.Where(p => p.Status == 1)
-                .SingleOrDefaultAsync(p => p.Id == id);
-
+            var getById = await dbContext.Posts.Where(p=>p.Id==id && p.Status==1)
+                .SingleOrDefaultAsync();
             var product = await dbContext.Products
                 .SingleOrDefaultAsync(p => p.Id == id);
             if (getById != null)
             {
-                // var Transaction = _mapper.Map<TransactionDTO>(transaction);
-                //var re = new GetPostWithProductResponse()
-                //{
-                //    Id = getById.Id,
-                //    PostId = getById.PostId,
-                //    AccountId = getById.AccountId,
-                //    Total = getById.Total,
-                //    Product = product
-                //};
                 var map = _mapper.Map<GetPostWithProductResponse>(getById);
                 var mapProduct = _mapper.Map<GetProductResponse>(product);
                 map.Product = mapProduct;
                 return map;
             }
             return null;
+        }
+
+        public async Task<IEnumerable<GetPostWithProductResponse>> SortPostByName(string name)
+        {
+            var get = new List<Post>();
+            if (!string.IsNullOrEmpty(name))
+            {
+                get = await dbContext.Posts.Where(p => p.Title.Contains(name))
+                    .ToListAsync();
+            }
+            else get = await dbContext.Posts.ToListAsync();
+            if (get == null)
+                return null;
+
+
+            IEnumerable<GetPostWithProductResponse> result = get.Select(
+                 x =>
+                 {
+                     return _mapper.Map<GetPostWithProductResponse>(x);
+
+                 }
+               ).ToList();
+            
+            foreach (var temp in result.ToList())
+            {
+                var product = await productRepository.GetProductById(temp.Id);
+                if (product.Name.Contains(name))
+                {
+                    temp.Product = null;
+                }
+                else
+                {
+                    var mapProduct = _mapper.Map<GetProductResponse>(product);
+                    temp.Product = mapProduct;
+                }
+            }
+            return result;
         }
 
         public async Task<UpdatePostResponse> UpdatePost(Guid id, UpdatePostRequest request)
@@ -154,6 +203,7 @@ namespace ShopSecondHand.Repository.PostRepository
             up.Description = request.PostDescription;
             up.ImageUrl = request.ImageUrl;
             up.Price = request.Price;
+            up.LastUpdateAt= DateTime.Now;
             up.BuildingId = request.BuildingId;
             dbContext.Posts.Update(up);
 

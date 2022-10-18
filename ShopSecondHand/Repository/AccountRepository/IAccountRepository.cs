@@ -1,5 +1,6 @@
 ﻿using ShopSecondHand.Data.RequestModels.AccountRequest;
 using ShopSecondHand.Data.ResponseModels.AccountResponse;
+using ShopSecondHand.Data.ResponseModels.AuthenResponse;
 using ShopSecondHand.Models;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace ShopSecondHand.Repository.AccountRepository
     public interface IAccountRepository 
     {
         Task<IEnumerable<GetAccountResponse>> GetAccount();
-        Task<CreateAccountResponse> CreateAccountWithWallet(CreateAccountRequest userRequest);
+        Task<Account> CreateAccountWithWallet(CreateAccountRequest userRequest);
         //Task<CreateAccountResponse> CreateAccount(CreateAccountRequest userRequest);
         Task<UpdateAccountResponse> UpdateAccount(Guid id, UpdateAccountRequest request);
         void DeleteAccount(Guid id);

@@ -26,6 +26,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using ShopSecondHand.Repository.AuthenRepository;
 using ShopSecondHand.Repository.PostRepository;
+using ShopSecondHand.Repository.SearchRepository;
 
 namespace ShopSecondHand
 {
@@ -62,6 +63,8 @@ namespace ShopSecondHand
             services.AddScoped<IAuthenRepository, AuthenRepository>();
 
             services.AddScoped<IPostRepository, PostRepository>();
+
+            services.AddScoped<ISearchRepository, SearchRepository>();
 
 
             // Cors
