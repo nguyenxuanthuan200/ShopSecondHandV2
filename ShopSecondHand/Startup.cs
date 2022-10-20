@@ -42,9 +42,21 @@ namespace ShopSecondHand
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            string connectionString = Configuration.GetConnectionString("DBConnection");
+            string env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            if (env != null && env.Equals("Production"))
+            {
+                connectionString = Configuration.GetConnectionString("production");
+                //string HOST = Configuration["HOST"];
+                //string DATABASE = Configuration["DATABASE"];
+                //string USER_ID = Configuration["USER_ID"];
+                //string DATABASE_PORT = Configuration["DATABASE_PORT"];
+                //string PASSWORD = Configuration["PASSWORD"];
+                //connectionString = $"Server={HOST};Port={DATABASE_PORT};Database={DATABASE};User Id={USER_ID};Password={PASSWORD};SSL Mode=Prefer;Trust Server Certificate=true;";
 
+            }
             services.AddDbContext<ShopSecondHandContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
+            options.UseSqlServer(connectionString));
 
             services.AddScoped<IBuildingRepository, BuildingRepository>();
 
