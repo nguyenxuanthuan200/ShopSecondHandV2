@@ -62,26 +62,44 @@ namespace ShopSecondHand.Repository.SearchRepository
             {
 
             }
+            //IEnumerable<GetPostWithProductResponse>  result = listPost.Select(
+            //       hh =>
+            //       {
+            //           new GetPostWithProductResponse
+            //           {
+            //               //return _mapper.Map<GetPostWithProductResponse>(x);
+            //               Id = hh.Id,
+            //               Title = hh.Title,
+            //               Description = hh.Description,
+            //               ImageUrl = hh.ImageUrl,
+            //               AccountId = hh.AccountId,
+            //               Price = hh.Price,
+            //               CreateAt = hh.CreateAt,
+            //               LastUpdateAt = hh.LastUpdateAt,
+            //               BuildingId = hh.BuildingId,
+            //           };
+            //       }
+            //     );
+            //IEnumerable<GetPostResponse> result = listPost.Select(hh =>
+            //{
+            //    return _mapper.Map<GetPostResponse>(hh);
+            //        //Id = hh.Id,
+            //        //Title = hh.Title,
+            //        //Description = hh.Description,
+            //        //ImageUrl = hh.ImageUrl,
+            //        //AccountId = hh.AccountId,
+            //        //Price = hh.Price,
+            //        //CreateAt = hh.CreateAt,
+            //        //LastUpdateAt = hh.LastUpdateAt,
+            //        //BuildingId = hh.BuildingId,
+            //    //Product = new GetProductResponse()
+            //    //{
+            //    //    Id = hh.Id,
+            //    //    Name=listProduct.Where(p=>p.Name),
+            //    //}
 
-            var result = listPost.Select(hh => new GetPostResponse
-            {
-                Id = hh.Id,
-                Title = hh.Title,
-                Description = hh.Description,
-                ImageUrl = hh.ImageUrl,
-                AccountId = hh.AccountId,
-                Price=hh.Price,
-                CreateAt = hh.CreateAt,
-                LastUpdateAt = hh.LastUpdateAt,
-                BuildingId = hh.BuildingId,
-                //Product = new GetProductResponse()
-                //{
-                //    Id = hh.Id,
-                //    Name=listProduct.Where(p=>p.Name),
-                //}
-
-            });
-            return result;
+            //});
+            return null;
         }
     }
 }
