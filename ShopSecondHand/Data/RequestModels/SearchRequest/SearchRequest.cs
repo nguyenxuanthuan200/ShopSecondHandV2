@@ -4,7 +4,7 @@ namespace ShopSecondHand.Data.RequestModels.SearchRequest
 {
     public class SearchRequest
     {
-        public string Keyword { get; set; }
+        public string? Keyword { get; set; }
 
         public int? Page { get; set; }
 
@@ -12,5 +12,6 @@ namespace ShopSecondHand.Data.RequestModels.SearchRequest
 
         public string? SortBy { get; set; } // theo ngay moi nhat
         public Guid? CateId { get; set; } // theo category
+        public Guid? BuildingId { get; set; } // theo building
     }
 }
