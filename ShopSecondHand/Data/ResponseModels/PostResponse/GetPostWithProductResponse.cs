@@ -1,4 +1,5 @@
-﻿using ShopSecondHand.Data.ResponseModels.ProductResponse;
+﻿using ShopSecondHand.Data.ResponseModels.BuildingResponse;
+using ShopSecondHand.Data.ResponseModels.ProductResponse;
 using ShopSecondHand.Models;
 using System;
 
@@ -13,8 +14,9 @@ namespace ShopSecondHand.Data.ResponseModels.PostResponse
         public Guid? AccountId { get; set; }
         public double? Price { get; set; }
         public DateTime? CreateAt { get; set; }
+        public Guid BuildingId { get; set; }
         public DateTime? LastUpdateAt { get; set; }
-        public Guid? BuildingId { get; set; }
+        public GetBuildingResponse Building { get; set; }
         public GetProductResponse Product { get; set; }
     }
 }

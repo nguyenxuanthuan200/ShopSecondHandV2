@@ -11,7 +11,7 @@ using System.Net;
 using System.Threading.Tasks;
 namespace ShopSecondHand.Controllers
 {
-    [Route("api/categorys")]
+    [Route("api/categories")]
     [ApiController]
     public class CategoryController : BaseController
     {

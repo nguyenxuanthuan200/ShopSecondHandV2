@@ -37,6 +37,7 @@ namespace ShopSecondHand.Controllers
                 return CustomResult("Fail", HttpStatusCode.InternalServerError);
             }
         }
+        [Authorize(Roles = "Admin,User")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOrderById(Guid id)
         {
@@ -55,7 +56,7 @@ namespace ShopSecondHand.Controllers
 
             }
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,User")]
         [HttpGet("posts")]
         public async Task<IActionResult> GetOrderByPostId(Guid id)
         {
@@ -75,6 +76,7 @@ namespace ShopSecondHand.Controllers
 
             }
         }
+        [Authorize(Roles = "Admin,User")]
         [HttpGet("users")]
         public async Task<IActionResult> GetOrderByAccountId(Guid id)
         {
@@ -93,6 +95,7 @@ namespace ShopSecondHand.Controllers
 
             }
         }
+        [Authorize(Roles = "User")]
         [HttpPost]
         public async Task<IActionResult> CreateOrder(CreateOrderRequest request)
         {
@@ -105,7 +108,7 @@ namespace ShopSecondHand.Controllers
                 var create = await orderRepository.CreateOrder(request);
                 if (create == null)
                 {
-                    return CustomResult("Order da ton tai", HttpStatusCode.Accepted);
+                    return CustomResult("Balance k du", HttpStatusCode.Accepted);
                 }
                 return CustomResult("Success", create, HttpStatusCode.Created);
             }
@@ -115,6 +118,7 @@ namespace ShopSecondHand.Controllers
 
             }
         }
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateOrder(Guid id, UpdateOrderRequest request)
         {
@@ -140,6 +144,7 @@ namespace ShopSecondHand.Controllers
             }
 
         }
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public IActionResult DeleteOrder(Guid id)
         {

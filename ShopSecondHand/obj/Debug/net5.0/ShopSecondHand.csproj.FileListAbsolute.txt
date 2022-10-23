@@ -226,3 +226,4 @@ C:\Study\SWD\Shop2Hand\ShopSecondHand\obj\Debug\net5.0\refint\ShopSecondHand.dll
 C:\Study\SWD\Shop2Hand\ShopSecondHand\obj\Debug\net5.0\ShopSecondHand.pdb
 C:\Study\SWD\Shop2Hand\ShopSecondHand\obj\Debug\net5.0\ShopSecondHand.genruntimeconfig.cache
 C:\Study\SWD\Shop2Hand\ShopSecondHand\obj\Debug\net5.0\ref\ShopSecondHand.dll
+C:\Study\SWD\Shop2Hand\ShopSecondHand\bin\Debug\net5.0\PagedList.dll

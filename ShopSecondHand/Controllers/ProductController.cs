@@ -70,7 +70,7 @@ namespace ShopSecondHand.Controllers
 
             }
         }
-        [HttpGet("categorys")]
+        [HttpGet("categories")]
         public async Task<IActionResult> GetProductByCategoryId(Guid id)
         {
             try
