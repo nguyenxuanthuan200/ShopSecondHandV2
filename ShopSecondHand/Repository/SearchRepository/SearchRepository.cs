@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PagedList;
 
 namespace ShopSecondHand.Repository.SearchRepository
 {
@@ -101,7 +102,7 @@ namespace ShopSecondHand.Repository.SearchRepository
 
                  );
 
-            return result;
+            return result.ToPagedList((int)request.Page,(int)request.PageSize);
         }
 
 

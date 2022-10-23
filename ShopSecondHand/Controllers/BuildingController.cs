@@ -12,7 +12,7 @@ namespace ShopSecondHand.Controllers
 {
     [Route("api/buildings")]
     [ApiController]
-   
+
     public class BuildingController : BaseController
     {
         private readonly IBuildingRepository buildingRepository;

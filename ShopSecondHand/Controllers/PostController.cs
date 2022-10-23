@@ -5,6 +5,9 @@ using ShopSecondHand.Repository.PostRepository;
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using PagedList;
+using ShopSecondHand.Data.RequestModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ShopSecondHand.Controllers
 {
@@ -38,8 +41,8 @@ namespace ShopSecondHand.Controllers
 
             }
         }
-        [HttpGet("catecorys")]
-        public async Task<IActionResult> GetPostByCategoryId(Guid id)
+        [HttpGet("catecories")]
+        public async Task<IActionResult> GetPostByCategoryId(Guid id, int? page, int? pageSize)
         {
             try
             {
@@ -48,7 +51,11 @@ namespace ShopSecondHand.Controllers
                 {
                     return CustomResult("Not Found", HttpStatusCode.NotFound);
                 }
-                return CustomResult("Success", result, HttpStatusCode.OK);
+                if (page == null) page = 1;
+                if (pageSize == null) pageSize = 10;
+
+
+                return CustomResult("Success", result.ToPagedList((int)page, (int)pageSize), HttpStatusCode.OK);
             }
             catch (Exception)
             {
@@ -57,20 +64,24 @@ namespace ShopSecondHand.Controllers
             }
         }
         [HttpGet]
-        public async Task<IActionResult> GetPost()
+        public async Task<IActionResult> GetPost(int? page, int? pageSize)
         {
             try
             {
                 var result = await postRepository.GetPost();
                 if (result == null)
                     return CustomResult("Not Found", HttpStatusCode.NotFound);
-                return CustomResult("Success", result, HttpStatusCode.OK);
+                if (page == null) page = 1;
+                if (pageSize == null) pageSize = 10;
+
+                return CustomResult("Success", result.ToPagedList((int)page, (int)pageSize), HttpStatusCode.OK);
             }
             catch (Exception)
             {
                 return CustomResult("Fail", HttpStatusCode.InternalServerError);
             }
         }
+        [Authorize(Roles = "User")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, UpdatePostRequest request)
         {
@@ -95,6 +106,7 @@ namespace ShopSecondHand.Controllers
                 return CustomResult("Fail", HttpStatusCode.InternalServerError);
             }
         }
+        [Authorize(Roles = "Admin,User")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
@@ -113,8 +125,9 @@ namespace ShopSecondHand.Controllers
                 return CustomResult("Fail", HttpStatusCode.InternalServerError);
             }
         }
+        [Authorize(Roles = "Admin,User")]
         [HttpGet("accounts")]
-        public async Task<IActionResult> GetPostByAccountId(Guid id)
+        public async Task<IActionResult> GetPostByAccountId(Guid id, int? page, int? pageSize)
         {
             try
             {
@@ -123,8 +136,10 @@ namespace ShopSecondHand.Controllers
                 {
                     return CustomResult("Not Found", HttpStatusCode.NotFound);
                 }
+                if (page == null) page = 1;
+                if (pageSize == null) pageSize = 10;
 
-                return CustomResult("Success", result, HttpStatusCode.OK);
+                return CustomResult("Success", result.ToPagedList((int)page, (int)pageSize), HttpStatusCode.OK);
             }
             catch (Exception)
             {
@@ -133,6 +148,7 @@ namespace ShopSecondHand.Controllers
             }
 
         }
+        [Authorize(Roles = "User")]
         [HttpPost]
         public async Task<IActionResult> CreatePost(CreatePostRequest request)
         {

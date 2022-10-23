@@ -34,8 +34,8 @@ namespace ShopSecondHand.Repository.OrderDetailRepository
                 a.Price = request.Price;
                 a.Quantity = request.Quantity;
             };
-            dbContext.OrderDetails.AddAsync(a);
-            dbContext.SaveChangesAsync();
+            await dbContext.OrderDetails.AddAsync(a);
+            await dbContext.SaveChangesAsync();
             var re = _mapper.Map<CreateOrderDetailResponse>(a);
             return re;
         }
@@ -49,7 +49,7 @@ namespace ShopSecondHand.Repository.OrderDetailRepository
                 // throw new Exception("This Building is unavailable!");
             }
             dbContext.OrderDetails.Remove(delete);
-            dbContext.SaveChangesAsync();
+            dbContext.SaveChanges();
         }
 
         public async Task<IEnumerable<GetOrderDetailResponse>> GetOrderDetail()

@@ -90,21 +90,21 @@ namespace ShopSecondHand.Controllers
         }
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAccount(Guid id)
+        public Task<IActionResult> DeleteAccount(Guid id)
         {
             try
             {
                 var delete = accountRepository.GetAccountById(id);
                 if (delete == null)
                 {
-                    return CustomResult("Not Found", HttpStatusCode.NotFound);
+                    return Task.FromResult(CustomResult("Not Found", HttpStatusCode.NotFound));
                 }
                 accountRepository.DeleteAccount(id);
-                return CustomResult("Success", HttpStatusCode.OK);
+                return Task.FromResult(CustomResult("Success", HttpStatusCode.OK));
             }
             catch (Exception)
             {
-                return CustomResult("Fail", HttpStatusCode.InternalServerError);
+                return Task.FromResult(CustomResult("Fail", HttpStatusCode.InternalServerError));
             }
         }
         [Authorize(Roles = "Admin")]

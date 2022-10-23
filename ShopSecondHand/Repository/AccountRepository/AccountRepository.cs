@@ -111,8 +111,8 @@ namespace ShopSecondHand.Repository.AccountRepository
                 wallet.Id = Id;
                 wallet.Balance = 0;
             }
-            dbContext.Accounts.AddAsync(userr);
-            dbContext.Wallets.AddAsync(wallet);
+            await dbContext.Accounts.AddAsync(userr);
+            await dbContext.Wallets.AddAsync(wallet);
             await dbContext.SaveChangesAsync();
             //var re =  _mapper.Map<CreateAccountResponse>(userr);
            // var re = authenRepository.GenerateToken(userr);
@@ -120,13 +120,13 @@ namespace ShopSecondHand.Repository.AccountRepository
         }
    
 
-        public void DeleteAccount(Guid id)
+        public async void DeleteAccount(Guid id)
         {
             var delete = dbContext.Accounts
               .SingleOrDefault(p => p.Id == id);
             delete.Status = false;
             dbContext.Accounts.Update(delete);
-            dbContext.SaveChangesAsync();
+           await dbContext.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<GetAccountResponse>> GetAccount()

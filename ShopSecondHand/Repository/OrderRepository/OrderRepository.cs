@@ -23,11 +23,26 @@ namespace ShopSecondHand.Repository.OrderRepository
         }
         public async Task<CreateOrderResponse> CreateOrder(CreateOrderRequest request)
         {
-            //var building = await dbContext.Orders
-            //    .SingleOrDefaultAsync(p => p.Id==request.id);
-            //if (building != null)
-            //    return null;
-            var id= Guid.NewGuid();
+            if (request.TransactionType.ToUpper().Equals("VI"))
+            {
+                var balance = await dbContext.Wallets.Where(p => p.Id == request.WalletId).SingleOrDefaultAsync();
+                if (balance.Balance >= request.Total)//du tien
+                {
+                    balance.Balance = balance.Balance - request.Total;
+                    var baipostcuanguoiban = await dbContext.Posts.Where(p => p.Id == request.PostId).SingleOrDefaultAsync();
+                    var vitiencuanguoiban = await dbContext.Wallets.Where(p => p.Id == baipostcuanguoiban.AccountId).SingleOrDefaultAsync();
+                    vitiencuanguoiban.Balance = vitiencuanguoiban.Balance + request.Total;
+                    dbContext.Wallets.Update(balance);
+                    dbContext.Wallets.Update(vitiencuanguoiban);
+                    await dbContext.SaveChangesAsync();
+                }
+                else
+                {
+                    return null;
+                }
+
+            }
+            var id = Guid.NewGuid();
             Order order = new Order();
             {
                 order.Id = id;
@@ -38,14 +53,14 @@ namespace ShopSecondHand.Repository.OrderRepository
             Transaction transaction = new Transaction();
             {
                 transaction.Id = id;
-                transaction.TransactionTime= DateTime.Now;
+                transaction.TransactionTime = DateTime.Now;
                 transaction.Status = 1;
                 transaction.TransactionType = request.TransactionType;
                 transaction.WalletId = request.WalletId;
                 transaction.Description = request.Description;
             }
-            dbContext.Orders.AddAsync(order);
-            dbContext.Transactions.AddAsync(transaction);
+            await dbContext.Orders.AddAsync(order);
+            await dbContext.Transactions.AddAsync(transaction);
             await dbContext.SaveChangesAsync();
             var re = _mapper.Map<CreateOrderResponse>(order);
             re.TransactionType = transaction.TransactionType;
@@ -64,7 +79,7 @@ namespace ShopSecondHand.Repository.OrderRepository
                 // throw new Exception("This Building is unavailable!");
             }
             dbContext.Orders.Remove(await deBuilding);
-            dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<GetOrderResponse>> GetOrder()
@@ -89,18 +104,18 @@ namespace ShopSecondHand.Repository.OrderRepository
         {
             var getById = await dbContext.Orders
                 .SingleOrDefaultAsync(p => p.Id == id);
-            var transaction= await dbContext.Transactions.SingleOrDefaultAsync(p => p.Id == id);
+            var transaction = await dbContext.Transactions.SingleOrDefaultAsync(p => p.Id == id);
             if (getById != null)
             {
                 var Transaction = _mapper.Map<TransactionDTO>(transaction);
                 var re = new GetOrderWithTransactionResponse()
                 {
-                    Id=getById.Id,
+                    Id = getById.Id,
                     PostId = getById.PostId,
                     AccountId = getById.AccountId,
                     Total = getById.Total,
                     Transaction = Transaction
-            };
+                };
                 return re;
             }
             return null;
@@ -145,11 +160,11 @@ namespace ShopSecondHand.Repository.OrderRepository
             var userByBuilding = await dbContext.Orders
                 .Where(p => p.AccountId == id).ToListAsync();
 
-            IEnumerable<GetOrderResponse> result =userByBuilding.Select(
+            IEnumerable<GetOrderResponse> result = userByBuilding.Select(
                  x =>
                 {
-                 //   var getTransaction = await dbContext.Transactions
-                 //.SingleOrDefaultAsync(p => p.Id == x.Id);
+                    //   var getTransaction = await dbContext.Transactions
+                    //.SingleOrDefaultAsync(p => p.Id == x.Id);
                     return new GetOrderResponse()
                     {
                         Id = x.Id,

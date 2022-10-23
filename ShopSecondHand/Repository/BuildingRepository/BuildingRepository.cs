@@ -33,18 +33,18 @@ namespace ShopSecondHand.Repository.BuildingRepository
                 buildingg.Name = buildingRequest.Name;
                 buildingg.Address = buildingRequest.Address;
             };
-            dbContext.Buildings.AddAsync(buildingg);
-            dbContext.SaveChangesAsync();
+            await dbContext.Buildings.AddAsync(buildingg);
+            await dbContext.SaveChangesAsync();
             var re = _mapper.Map<CreateBuildingResponse>(buildingg);
             return re;
         }
 
-        public void DeleteBuilding(Guid id)
+        public async void DeleteBuilding(Guid id)
         {
-            var deBuilding = dbContext.Buildings
-                .SingleOrDefault(p => p.Id == id);
+            var deBuilding = await dbContext.Buildings
+                .SingleOrDefaultAsync(p => p.Id == id);
             dbContext.Buildings.Remove(deBuilding);
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
 
         }
         public async Task<IEnumerable<GetBuildingResponse>> GetBuilding()
