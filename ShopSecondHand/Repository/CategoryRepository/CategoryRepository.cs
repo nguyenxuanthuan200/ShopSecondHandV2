@@ -32,6 +32,8 @@ namespace ShopSecondHand.Repository.CategoryRepository
             {
                 categoryy.Id = Guid.NewGuid();
                 categoryy.Name = categoryRequest.Name;
+                categoryy.Icon = categoryRequest.Icon;
+
             };
             var result = await dbContext.Categories.AddAsync(categoryy);
             await dbContext.SaveChangesAsync();
@@ -39,13 +41,13 @@ namespace ShopSecondHand.Repository.CategoryRepository
             return re;
         }
 
-        public void DeleteCategory(Guid id)
+        public async void DeleteCategory(Guid id)
         {
-            var deCate = dbContext.Categories
-               .SingleOrDefault(p => p.Id == id);
+            var deCate = await dbContext.Categories
+               .SingleOrDefaultAsync(p => p.Id == id);
 
             dbContext.Categories.Remove(deCate);
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
 
         }
 
@@ -58,7 +60,8 @@ namespace ShopSecondHand.Repository.CategoryRepository
                     return new GetCategoryResponse()
                     {
                         Id = x.Id,
-                        Name = x.Name
+                        Name = x.Name,
+                        Icon =x.Icon
                     };
                 }
                 ).ToList();
@@ -75,7 +78,8 @@ namespace ShopSecondHand.Repository.CategoryRepository
             var re = new GetCategoryResponse()
             {
                 Id = getById.Id,
-                Name = getById.Name
+                Name = getById.Name,
+                Icon = getById.Icon
             };
             return re;
         }
@@ -91,7 +95,8 @@ namespace ShopSecondHand.Repository.CategoryRepository
                 var re = new GetCategoryResponse()
                 {
                     Id = getById.Id,
-                    Name = getById.Name
+                    Name = getById.Name,
+                    Icon = getById.Icon
                 };
                 return re;
             }
@@ -105,6 +110,7 @@ namespace ShopSecondHand.Repository.CategoryRepository
             if (upCategory == null) return null;
 
             upCategory.Name = categoryRequest.Name;
+            upCategory.Icon = categoryRequest.Icon;
             dbContext.Categories.Update(upCategory);
             await dbContext.SaveChangesAsync();
 

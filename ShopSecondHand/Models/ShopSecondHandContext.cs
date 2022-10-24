@@ -108,6 +108,9 @@ namespace ShopSecondHand.Models
                 entity.Property(e => e.Id)
                     .ValueGeneratedNever()
                     .HasColumnName("ID");
+                entity.Property(e => e.Icon)
+                   .HasMaxLength(500)
+                   .IsUnicode(false);
 
                 entity.Property(e => e.Name).HasMaxLength(50);
             });

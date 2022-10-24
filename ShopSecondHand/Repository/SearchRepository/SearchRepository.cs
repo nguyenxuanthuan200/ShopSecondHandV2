@@ -11,18 +11,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PagedList;
+using ShopSecondHand.Repository.BuildingRepository;
 
 namespace ShopSecondHand.Repository.SearchRepository
 {
     public class SearchRepository : ISearchRepository
     {
         private readonly ShopSecondHandContext dbContext;
+        private readonly IMapper _mapper;
+        private readonly IProductRepository productRepository;
+        private readonly IBuildingRepository buildingRepository;
 
-        public SearchRepository(ShopSecondHandContext dbContext)
+        public SearchRepository(ShopSecondHandContext dbContext, IMapper mapper, IProductRepository productRepository,
+            IBuildingRepository buildingRepository)
         {
             this.dbContext = dbContext;
+            _mapper = mapper;
+            this.productRepository = productRepository;
+            this.buildingRepository = buildingRepository;
         }
-        public async Task<IEnumerable<GetPostResponse>> SearchFilter(SearchRequest request)
+        public async Task<IEnumerable<GetPostWithProductResponse>> SearchFilter(SearchRequest request)
         {
             var listPost = dbContext.Posts.AsQueryable();
             listPost = listPost.Where(p => p.Status == 1);
@@ -43,10 +51,7 @@ namespace ShopSecondHand.Repository.SearchRepository
             {
                 listPost = listPost.Where(p => p.Title.Contains(request.Keyword));
             }
-            if (request.Page.HasValue)
-            {
-
-            }
+           
             //sort by ngay moi nhat
             if (!string.IsNullOrEmpty(request.SortBy))
             {
@@ -86,7 +91,7 @@ namespace ShopSecondHand.Repository.SearchRepository
             var result = listPost.Select(
                    hh =>
 
-                       new GetPostResponse
+                       new GetPostWithProductResponse
                        {
                            Id = hh.Id,
                            Title = hh.Title,
@@ -96,12 +101,21 @@ namespace ShopSecondHand.Repository.SearchRepository
                            Price = hh.Price,
                            CreateAt = hh.CreateAt,
                            LastUpdateAt = hh.LastUpdateAt,
-                           BuildingId = hh.BuildingId,
+                           BuildingId = (Guid)hh.BuildingId,
 
                        }
 
-                 );
-
+                 ).ToList();
+            foreach(var temp in result)
+            {
+                var product = await productRepository.GetProductById(temp.Id);
+                var mapProduct = _mapper.Map<GetProductResponse>(product);
+                temp.Product = mapProduct;
+                //var category = await categoryRepository.GetCategoryById((Guid)product.CategoryId);
+                //temp.ca
+                var building = await buildingRepository.GetBuildingById(temp.BuildingId);
+                temp.Building = building;
+            }
             return result.ToPagedList((int)request.Page,(int)request.PageSize);
         }
 

@@ -7,6 +7,6 @@ namespace ShopSecondHand.Repository.SearchRepository
 {
     public interface ISearchRepository
     {
-        Task<IEnumerable<GetPostResponse>> SearchFilter(SearchRequest request);
+        Task<IEnumerable<GetPostWithProductResponse>> SearchFilter(SearchRequest request);
     }
 }
