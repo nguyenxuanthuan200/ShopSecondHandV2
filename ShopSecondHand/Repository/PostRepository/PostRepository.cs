@@ -6,6 +6,7 @@ using ShopSecondHand.Data.ResponseModels.PostResponse;
 using ShopSecondHand.Data.ResponseModels.ProductResponse;
 using ShopSecondHand.Models;
 using ShopSecondHand.Repository.BuildingRepository;
+using ShopSecondHand.Repository.CategoryRepository;
 using ShopSecondHand.Repository.ProductRepository;
 using System;
 using System.Collections.Generic;
@@ -20,14 +21,16 @@ namespace ShopSecondHand.Repository.PostRepository
         private readonly IMapper _mapper;
         private readonly IProductRepository productRepository;
         private readonly IBuildingRepository buildingRepository;
+        private readonly ICategoryRepository categoryRepository;
 
         public PostRepository(ShopSecondHandContext dbContext, IMapper mapper, IProductRepository productRepository,
-            IBuildingRepository buildingRepository)
+            IBuildingRepository buildingRepository, ICategoryRepository categoryRepository)
         {
             this.dbContext = dbContext;
             _mapper = mapper;
             this.productRepository = productRepository;
             this.buildingRepository = buildingRepository;
+            this.categoryRepository = categoryRepository;
         }
         public async Task<CreatePostResponse> CreatePost(CreatePostRequest request)
         {
@@ -54,28 +57,23 @@ namespace ShopSecondHand.Repository.PostRepository
                 product.Quantity = request.Quantity;
                 product.CategoryId = request.CategoryId;
             }
-            dbContext.Posts.AddAsync(post);
-            dbContext.Products.AddAsync(product);
+            await dbContext.Posts.AddAsync(post);
+            await dbContext.Products.AddAsync(product);
             await dbContext.SaveChangesAsync();
             var re = _mapper.Map<CreatePostResponse>(post);
             var mapProduct = _mapper.Map<GetProductResponse>(product);
             re.Product = mapProduct;
-            //re.Product.Name = product.Name;
-            //re.Product.Description = product.Description;
-            //re.Product.Price = product.Price;
-            //re.Product.Quantity = product.Quantity;
-            //re.Product.CategoryId = product.CategoryId;
 
             return re;
         }
 
-        public void Delete(Guid id)
+        public async void Delete(Guid id)
         {
-            var delete = dbContext.Posts
-              .SingleOrDefault(p => p.Id == id);
+            var delete = await dbContext.Posts
+              .SingleOrDefaultAsync(p => p.Id == id);
             delete.Status = 0;
             dbContext.Posts.Update(delete);
-            dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<GetPostWithProductResponse>> GetPost()
@@ -94,6 +92,8 @@ namespace ShopSecondHand.Repository.PostRepository
                 var product = await productRepository.GetProductById(temp.Id);
                 var mapProduct = _mapper.Map<GetProductResponse>(product);
                 temp.Product = mapProduct;
+                //var category = await categoryRepository.GetCategoryById((Guid)product.CategoryId);
+                //temp.ca
                 var building = await buildingRepository.GetBuildingById(temp.BuildingId);
                 temp.Building = building;
             }
@@ -161,6 +161,7 @@ namespace ShopSecondHand.Repository.PostRepository
                 var map = _mapper.Map<GetPostWithProductResponse>(getById);
                 var mapProduct = _mapper.Map<GetProductResponse>(product);
                 map.Product = mapProduct;
+                //var category = await ca
                 var building = await buildingRepository.GetBuildingById((Guid)getById.BuildingId);
                 map.Building = building;
                 return map;
