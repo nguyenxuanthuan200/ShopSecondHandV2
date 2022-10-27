@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using ShopSecondHand.Data.RequestModels.AuthenRequest;
 using ShopSecondHand.Data.ResponseModels.AuthenResponse;
+using ShopSecondHand.Data.ResponseModels.BuildingResponse;
 using ShopSecondHand.Models;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -30,7 +31,6 @@ namespace ShopSecondHand.Repository.AuthenRepository
 
         public async Task<Token> GenerateToken(Account account)
         {
-            System.Diagnostics.Debug.WriteLine("chet ti");
             var roleName = await dbContext.Roles.SingleOrDefaultAsync(p => p.Id == account.RoleId);
 
             if (roleName.Name.Equals("ADMIN"))
@@ -54,11 +54,12 @@ namespace ShopSecondHand.Repository.AuthenRepository
 
                 result.JwtToken = new JwtSecurityTokenHandler().WriteToken(token);
                 result.Role = roleName.Name;
+                var building= await dbContext.Buildings.SingleOrDefaultAsync(p => p.Id == account.BuildingId);
+                result.Building = _mapper.Map<GetBuildingResponse>(building);
                 return result;
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("quy xu");
                 var claims = new[]
                 {
                     new Claim(ClaimTypes.Role, "User"),
@@ -67,18 +68,16 @@ namespace ShopSecondHand.Repository.AuthenRepository
                     new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
                     new Claim("Id",account.Id.ToString())
                     };
-                System.Diagnostics.Debug.WriteLine("sau cliam");
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtConfig:Key"]));
-                System.Diagnostics.Debug.WriteLine("sau key");
                 var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-                System.Diagnostics.Debug.WriteLine("sau signin");
                 var token = new JwtSecurityToken(_configuration["JwtConfig:Issuer"], _configuration["JwtConfig:Audience"], claims, expires: DateTime.UtcNow.AddMinutes(120), signingCredentials: signIn);
-                System.Diagnostics.Debug.WriteLine("sau token");
 
                 var result = _mapper.Map<Token>(account);
 
                 result.JwtToken = new JwtSecurityTokenHandler().WriteToken(token);
                 result.Role = roleName.Name;
+                var building = await dbContext.Buildings.SingleOrDefaultAsync(p => p.Id == account.BuildingId);
+                result.Building = _mapper.Map<GetBuildingResponse>(building);
                 return result;
             }
 

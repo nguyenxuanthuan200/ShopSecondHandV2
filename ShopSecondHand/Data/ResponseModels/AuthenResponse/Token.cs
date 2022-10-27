@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ShopSecondHand.Data.ResponseModels.BuildingResponse;
+using System;
 
 namespace ShopSecondHand.Data.ResponseModels.AuthenResponse
 {
@@ -12,6 +13,7 @@ namespace ShopSecondHand.Data.ResponseModels.AuthenResponse
         public string AvatarUrl { get; set; }
         public string Role { get; set; }
         public bool Status { get; set; }
+        public GetBuildingResponse Building { get; set; }
         public string JwtToken { get; set; }
     }
 }
