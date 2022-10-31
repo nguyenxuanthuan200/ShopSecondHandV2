@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAZ46JX43a5UKeoSOebELooAAAAAACAAAAAAAQZgAAAAEAACAAAABrkpsIHg6HrGykMHtx5953FRcinvieJjPqb3uz8f/u5gAAAAAOgAAAAAIAACAAAAArV5AL8VvY/IHyF+lVsD7oZWeokN7V9tCPyr3Ejrzd7IAAAACSHvYjYVwxr0YZBRJtppmGlIzjXNzmmldEf6JFNaGVsEE7Fzlw7ZFqRmStdgy/5SRe1er+/UCaDSxza9ZNcRBKxz/R0PUYVNtT4REjdV+7GIq8JOdh6+HmDJyFnyW9E5rLCMQpQYEDrb5RiZRL/s1U+LhjBIWElvDFOdP86vZUdEAAAAB85bVdtypaBXJNuRLH4Q5TFNje2sUwz+/59mfTweuceeiFOW2uChAWisX0Dpj6LY2rOAl2U3rAvx1SwjkF4ZI/</EncryptedPassword>
+    <History>True|2022-10-31T09:03:03.0595531Z;</History>
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DBConnection">
+      <Value>Data Source=XUANTHUAN\SQL%3bInitial Catalog=ShopSecondHand%3bUser ID=sa%3bPassword=123%3bConnect Timeout=30%3bEncrypt=False%3bTrustServerCertificate=true%3bApplicationIntent=ReadWrite%3bMultiSubnetFailover=False</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+  <ItemGroup>
+    <EFMigrations Include="ShopSecondHand.Models.ShopSecondHandContext">
+      <Value>Data Source=tcp:shopsecondhanddbserver.database.windows.net,1433%3bInitial Catalog=ShopSecondHand_db%3bUser Id=nguyenxuanthuan%40shopsecondhanddbserver%3bPassword=qwert123%40</Value>
+    </EFMigrations>
+  </ItemGroup>
+</Project>

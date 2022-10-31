@@ -27,6 +27,7 @@ using System.Text;
 using ShopSecondHand.Repository.AuthenRepository;
 using ShopSecondHand.Repository.PostRepository;
 using ShopSecondHand.Repository.SearchRepository;
+using ShopSecondHand.Repository.CheckOutRepository;
 
 namespace ShopSecondHand
 {
@@ -77,6 +78,8 @@ namespace ShopSecondHand
             services.AddScoped<IPostRepository, PostRepository>();
 
             services.AddScoped<ISearchRepository, SearchRepository>();
+
+            services.AddScoped<ICheckOutRepository, CheckOutRepository>();
 
 
             // Cors

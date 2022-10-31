@@ -23,6 +23,8 @@ namespace ShopSecondHand.Repository.OrderRepository
         }
         public async Task<CreateOrderResponse> CreateOrder(CreateOrderRequest request)
         {
+            var checkAccount = await dbContext.Accounts.Where(p => p.Id == request.AccountId && p.Status==true).SingleOrDefaultAsync();
+            if (checkAccount==null) return null;
             if (request.TransactionType.ToUpper().Equals("VI"))
             {
                 var balance = await dbContext.Wallets.Where(p => p.Id == request.WalletId).SingleOrDefaultAsync();
