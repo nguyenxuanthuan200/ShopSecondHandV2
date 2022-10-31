@@ -7050,7 +7050,8 @@
       "Microsoft.EntityFrameworkCore.Tools >= 5.0.15",
       "Npgsql.EntityFrameworkCore.PostgreSQL >= 5.0.10",
       "PagedList >= 1.17.0",
-      "Swashbuckle.AspNetCore >= 5.6.3"
+      "Swashbuckle.AspNetCore >= 5.6.3",
+      "Swashbuckle.AspNetCore.SwaggerGen >= 5.6.3"
     ]
   },
   "packageFolders": {
@@ -7145,6 +7146,10 @@
             "version": "[1.17.0, )"
           },
           "Swashbuckle.AspNetCore": {
+            "target": "Package",
+            "version": "[5.6.3, )"
+          },
+          "Swashbuckle.AspNetCore.SwaggerGen": {
             "target": "Package",
             "version": "[5.6.3, )"
           }
