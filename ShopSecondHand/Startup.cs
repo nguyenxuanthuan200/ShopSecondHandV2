@@ -61,7 +61,7 @@ namespace ShopSecondHand
             services.AddScoped<IBuildingRepository, BuildingRepository>();
 
             services.AddScoped<IAccountRepository, AccountRepository>();
-           // services.AddScoped<IAccountService, AccountService>();
+            // services.AddScoped<IAccountService, AccountService>();
 
 
             services.AddScoped<ICategoryRepository, CategoryRepository>();
@@ -145,7 +145,7 @@ namespace ShopSecondHand
                    };
                });
 
-           // services.Configure<JwtConfig>(Configuration.GetSection("Jwt"));
+            // services.Configure<JwtConfig>(Configuration.GetSection("Jwt"));
 
             services.AddSwaggerGen(c =>
             {
@@ -179,9 +179,16 @@ namespace ShopSecondHand
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
+                //app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ShopSecondHand v1"));
             }
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ShopSecondHand v1");
+                c.RoutePrefix = string.Empty;
+            });
+
 
             app.UseHttpsRedirection();
             app.UseCors();
