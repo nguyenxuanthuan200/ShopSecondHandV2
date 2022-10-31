@@ -4,6 +4,7 @@ namespace ShopSecondHand.Data.ResponseModels.OrderResponse
 {
     public class CreateOrderResponse
     {
+        public Guid Id { get; set; }
         public Guid? PostId { get; set; }
         public Guid? AccountId { get; set; }
         public Guid? WalletId { get; set; }

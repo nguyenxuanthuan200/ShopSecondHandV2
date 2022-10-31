@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <parameters>
-  <parameter name="IIS Web Application Name" description="" value="ShopSecondHandfptu" tags="IisApp">
+  <parameter name="IIS Web Application Name" description="" value="ShopSHApi" tags="IisApp">
     <parameterEntry kind="ProviderPath" scope="IisApp" match="^C:\\Study\\SWD\\Shop2Hand\\ShopSecondHand\\obj\\Release\\net5\.0\\PubTmp\\Out\\$" />
   </parameter>
   <parameter name="ShopSecondHand.Models.ShopSecondHandContext" description="" value="Data Source=tcp:shopsecondhanddbserver.database.windows.net,1433;Initial Catalog=ShopSecondHand_db;User Id=nguyenxuanthuan@shopsecondhanddbserver;Password=qwert123@" tags="dbfullsql">
