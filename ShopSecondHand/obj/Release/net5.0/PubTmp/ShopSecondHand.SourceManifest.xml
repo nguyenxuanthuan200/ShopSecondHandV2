@@ -1,5 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <sitemanifest>
   <IisApp path="C:\Study\SWD\Shop2Hand\ShopSecondHand\obj\Release\net5.0\PubTmp\Out\" />
-  <dbfullsql path="C:\Study\SWD\Shop2Hand\ShopSecondHand\obj\Release\net5.0\PubTmp\EFSQLScripts\ShopSecondHand.Models.ShopSecondHandContext.sql" />
 </sitemanifest>

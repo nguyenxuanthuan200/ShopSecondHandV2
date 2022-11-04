@@ -112,7 +112,7 @@ namespace ShopSecondHand.Controllers
         {
             try
             {
-                var delete = postRepository.GetPostById(id);
+                var delete = await postRepository.GetPostById(id);
                 if (delete == null)
                 {
                     return CustomResult("Not Found", HttpStatusCode.NotFound);
