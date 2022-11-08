@@ -2,8 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using ShopSecondHand.Data.RequestModels.OrderRequest;
 using ShopSecondHand.Data.ResponseModels.OrderResponse;
+using ShopSecondHand.Data.ResponseModels.PostResponse;
 using ShopSecondHand.Data.ResponseModels.TransactionResponse;
 using ShopSecondHand.Models;
+using ShopSecondHand.Repository.OrderDetailRepository;
+using ShopSecondHand.Repository.PostRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +18,15 @@ namespace ShopSecondHand.Repository.OrderRepository
     {
         private readonly ShopSecondHandContext dbContext;
         private readonly IMapper _mapper;
+        private readonly IPostRepository postRepository;
+        private readonly IOrderDetailRepository orderDetailRepository;
 
-        public OrderRepository(ShopSecondHandContext dbContext, IMapper mapper)
+        public OrderRepository(ShopSecondHandContext dbContext, IMapper mapper, IPostRepository postRepository, IOrderDetailRepository orderDetailRepository)
         {
             this.dbContext = dbContext;
             _mapper = mapper;
+            this.postRepository = postRepository;
+            this.orderDetailRepository = orderDetailRepository;
         }
         public async Task<CreateOrderResponse> CreateOrder(CreateOrderRequest request)
         {
@@ -150,33 +157,50 @@ namespace ShopSecondHand.Repository.OrderRepository
             return result;
         }
 
-        public async Task<IEnumerable<GetOrderResponse>> GetOrderByAccountId(Guid id)
+        public async Task<IEnumerable<GetOrderTransactionPostResponse>> GetOrderByAccountId(Guid id)
         {
             var getByPostId = await dbContext.Orders
                 .FirstOrDefaultAsync(p => p.AccountId == id);
-            //Guid idBuilding;
             if (getByPostId == null)
                 return null;
 
 
-            var userByBuilding = await dbContext.Orders
+            var listOrder = await dbContext.Orders
                 .Where(p => p.AccountId == id).ToListAsync();
-
-            IEnumerable<GetOrderResponse> result = userByBuilding.Select(
-                 x =>
+            List< GetOrderTransactionPostResponse > list=new List<GetOrderTransactionPostResponse>();
+            foreach (var order in listOrder)
+            {
+                GetPostWithProductResponse post= await postRepository.GetPostById((Guid)order.PostId);
+                var transaction = await dbContext.Transactions.SingleOrDefaultAsync(p => p.Id == order.Id);
+                var orderdetail= await orderDetailRepository.GetOrderDetailByOrderId(order.Id);
+                GetOrderTransactionPostResponse orderr = new GetOrderTransactionPostResponse();
+                var Transaction = _mapper.Map<TransactionDTO>(transaction);
+                orderr.Id = order.Id;
+                orderr.Total = order.Total;
+                orderr.Post = post;
+                foreach (var item in orderdetail)
                 {
-                    //   var getTransaction = await dbContext.Transactions
-                    //.SingleOrDefaultAsync(p => p.Id == x.Id);
-                    return new GetOrderResponse()
-                    {
-                        Id = x.Id,
-                        PostId = x.PostId,
-                        AccountId = x.AccountId,
-                        Total = x.Total
-                    };
+                    orderr.Quantity = item.Quantity;
                 }
-                ).ToList();
-            return result;
+                orderr.Transaction = Transaction;
+                list.Add(orderr);
+
+            }
+            //IEnumerable<GetOrderResponse> result = listOrder.Select(
+            //     x =>
+            //    {
+            //        //   var getTransaction = await dbContext.Transactions
+            //        //.SingleOrDefaultAsync(p => p.Id == x.Id);
+            //        return new GetOrderResponse()
+            //        {
+            //            Id = x.Id,
+            //            PostId = x.PostId,
+            //            AccountId = x.AccountId,
+            //            Total = x.Total
+            //        };
+            //    }
+            //    ).ToList();
+            return list;
         }
 
         public async Task<UpdateOrderResponse> UpdateOrder(Guid id, UpdateOrderRequest request)

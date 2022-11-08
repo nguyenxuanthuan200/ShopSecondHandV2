@@ -9,7 +9,7 @@ namespace ShopSecondHand.Repository.OrderRepository
     public interface IOrderRepository
     {
         Task<IEnumerable<GetOrderResponse>> GetOrder();
-        Task<IEnumerable<GetOrderResponse>> GetOrderByAccountId(Guid id);
+        Task<IEnumerable<GetOrderTransactionPostResponse>> GetOrderByAccountId(Guid id);
         Task<GetOrderWithTransactionResponse> GetOrderById(Guid id);
         Task<IEnumerable<GetOrderResponse>> GetOrderByPostId(Guid id);
         Task<CreateOrderResponse> CreateOrder(CreateOrderRequest request);
