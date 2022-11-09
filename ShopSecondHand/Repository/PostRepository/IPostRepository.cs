@@ -8,7 +8,7 @@ namespace ShopSecondHand.Repository.PostRepository
 {
     public interface IPostRepository
     {
-        Task<IEnumerable<GetPostWithProductResponse>> GetPost();
+        Task<PostTotalResponse> GetPost(int? page, int? pageSize);
         Task<GetPostWithProductResponse> GetPostById(Guid id);
         Task<IEnumerable<GetPostWithProductResponse>> GetPostByAccountId(Guid id);
         Task<IEnumerable<GetPostWithProductResponse>> GetPostByCategoryId(Guid id);

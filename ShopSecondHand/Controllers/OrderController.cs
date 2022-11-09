@@ -112,7 +112,7 @@ namespace ShopSecondHand.Controllers
                 }
                 return CustomResult("Success", create, HttpStatusCode.Created);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return CustomResult("Fail", HttpStatusCode.InternalServerError);
 

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using PagedList;
 using ShopSecondHand.Data.RequestModels.PostRequest;
 using ShopSecondHand.Data.ResponseModels.BuildingResponse;
 using ShopSecondHand.Data.ResponseModels.PostResponse;
@@ -76,7 +77,7 @@ namespace ShopSecondHand.Repository.PostRepository
             await dbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<GetPostWithProductResponse>> GetPost()
+        public async Task<PostTotalResponse> GetPost(int? page, int? pageSize)
         {
             var post = await dbContext.Posts.Where(p => p.Status == 1).ToListAsync();
             if (post == null) return null;
@@ -97,8 +98,14 @@ namespace ShopSecondHand.Repository.PostRepository
                 var building = await buildingRepository.GetBuildingById(temp.BuildingId);
                 temp.Building = building;
             }
-
-            return result;
+            PostTotalResponse total = new PostTotalResponse();
+            if (page == null) page = 1;
+            if (pageSize == null) pageSize = 10;
+            total.Total = result.Count();
+            result = result.ToPagedList((int)page, (int)pageSize);
+            
+            total.Post = result;
+            return total;
         }
 
         public async Task<IEnumerable<GetPostWithProductResponse>> GetPostByAccountId(Guid id)

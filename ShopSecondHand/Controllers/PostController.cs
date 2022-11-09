@@ -68,13 +68,12 @@ namespace ShopSecondHand.Controllers
         {
             try
             {
-                var result = await postRepository.GetPost();
+                var result = await postRepository.GetPost(page,pageSize);
                 if (result == null)
                     return CustomResult("Not Found", HttpStatusCode.NotFound);
-                if (page == null) page = 1;
-                if (pageSize == null) pageSize = 10;
+              
 
-                return CustomResult("Success", result.ToPagedList((int)page, (int)pageSize), HttpStatusCode.OK);
+                return CustomResult("Success", result, HttpStatusCode.OK);
             }
             catch (Exception)
             {
