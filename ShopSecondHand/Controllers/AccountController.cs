@@ -29,6 +29,7 @@ namespace ShopSecondHand.Controllers
             }
 
         }
+        [Authorize(Roles = "User")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAccontWithWallet(Guid id)
         {
@@ -63,7 +64,7 @@ namespace ShopSecondHand.Controllers
                 return CustomResult("Fail", HttpStatusCode.InternalServerError);
             }
         }
-
+        [Authorize(Roles = "User")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, UpdateAccountRequest request)
         {
@@ -82,6 +83,29 @@ namespace ShopSecondHand.Controllers
                 }
                 //var result = _mapper.Map<CreateAccountResponse>(update);
                 return CustomResult("Success", update, HttpStatusCode.OK);
+            }
+            catch (Exception)
+            {
+                return CustomResult("Fail", HttpStatusCode.InternalServerError);
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("balance/{id}")]
+        public async Task<IActionResult> AddBalanceUser(Guid id,float money)
+        {
+            try
+            {
+                var check = await accountRepository.GetAccountById(id);
+
+                if (check == null)
+                {
+                    return CustomResult("Not Found", HttpStatusCode.NotFound);
+                }
+                var result = await accountRepository.AddBalanceAccount(id,money);
+                if(!result)
+                    return CustomResult("Fail", result, HttpStatusCode.NotFound);
+                return CustomResult("Success", result, HttpStatusCode.OK);
             }
             catch (Exception)
             {

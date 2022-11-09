@@ -20,6 +20,7 @@ namespace ShopSecondHand.Repository.AccountRepository
        // Task<Account> GetByUserNameAndPassword(string userName, string password);
         // Task<List<Account>> GetAccountByBuildingId(Guid id);
         Task<IEnumerable<GetAccountResponse>> GetAccountByBuildingId(Guid id);
+        Task<bool> AddBalanceAccount(Guid id,float money);
 
     }
 }

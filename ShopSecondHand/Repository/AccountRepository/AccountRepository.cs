@@ -207,5 +207,16 @@ namespace ShopSecondHand.Repository.AccountRepository
             }
             return null;
         }
+
+        public async Task<bool> AddBalanceAccount(Guid id,float money)
+        {
+            var wallet= await dbContext.Wallets.SingleOrDefaultAsync(p => p.Id == id);
+            if(wallet==null) return false;
+            if(money.Equals(null)||money==0) return false;
+            wallet.Balance = wallet.Balance + money;
+            dbContext.Wallets.Update(wallet);
+            await dbContext.SaveChangesAsync();
+            return true;
+        }
     }
 }

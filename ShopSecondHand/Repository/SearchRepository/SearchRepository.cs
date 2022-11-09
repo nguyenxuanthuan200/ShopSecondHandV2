@@ -30,7 +30,7 @@ namespace ShopSecondHand.Repository.SearchRepository
             this.productRepository = productRepository;
             this.buildingRepository = buildingRepository;
         }
-        public async Task<IEnumerable<GetPostWithProductResponse>> SearchFilter(SearchRequest request)
+        public async Task<PostTotalResponse> SearchFilter(SearchRequest request)
         {
             var listPost = dbContext.Posts.AsQueryable();
             listPost = listPost.Where(p => p.Status == 1);
@@ -116,7 +116,12 @@ namespace ShopSecondHand.Repository.SearchRepository
                 var building = await buildingRepository.GetBuildingById(temp.BuildingId);
                 temp.Building = building;
             }
-            return result.ToPagedList((int)request.Page,(int)request.PageSize);
+            PostTotalResponse total = new PostTotalResponse();
+            total.Total = result.Count();
+            result = result.ToPagedList((int)request.Page,(int)request.PageSize).ToList();
+            total.Post = result;
+
+            return total;
         }
 
 
