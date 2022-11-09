@@ -14,7 +14,7 @@ namespace ShopSecondHand.Repository.AccountRepository
         Task<Account> CreateAccountWithWallet(CreateAccountRequest userRequest);
         //Task<CreateAccountResponse> CreateAccount(CreateAccountRequest userRequest);
         Task<UpdateAccountResponse> UpdateAccount(Guid id, UpdateAccountRequest request);
-        void DeleteAccount(Guid id);
+        Task<bool> DeleteAccount(Guid id);
         Task<AccountWithWalletDTO> GetAccountWithWallet(Guid id);
         Task<GetAccountResponse> GetAccountById(Guid id);
        // Task<Account> GetByUserNameAndPassword(string userName, string password);

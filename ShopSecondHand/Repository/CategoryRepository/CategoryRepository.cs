@@ -41,14 +41,14 @@ namespace ShopSecondHand.Repository.CategoryRepository
             return re;
         }
 
-        public async void DeleteCategory(Guid id)
+        public async Task<bool> DeleteCategory(Guid id)
         {
             var deCate = await dbContext.Categories
                .SingleOrDefaultAsync(p => p.Id == id);
-
+            if (deCate == null) return false;
             dbContext.Categories.Remove(deCate);
             await dbContext.SaveChangesAsync();
-
+            return true;
         }
 
         public async Task<IEnumerable<GetCategoryResponse>> GetCategory()

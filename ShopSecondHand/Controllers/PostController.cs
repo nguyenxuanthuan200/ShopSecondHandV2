@@ -110,14 +110,13 @@ namespace ShopSecondHand.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             try
-            {
-                var delete = await postRepository.GetPostById(id);
-                if (delete == null)
+            { 
+                Boolean check= await postRepository.Delete(id);
+                if (check == false)
                 {
                     return CustomResult("Not Found", HttpStatusCode.NotFound);
                 }
-                postRepository.Delete(id);
-                return CustomResult("Success", HttpStatusCode.OK);
+                return CustomResult("Success",check, HttpStatusCode.OK);
             }
             catch (Exception)
             {

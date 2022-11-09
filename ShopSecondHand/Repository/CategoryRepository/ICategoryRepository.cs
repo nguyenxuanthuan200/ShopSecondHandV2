@@ -13,6 +13,6 @@ namespace ShopSecondHand.Repository.CategoryRepository
         Task<GetCategoryResponse> GetCategoryById(Guid id);
         Task<CreateCategoryResponse> CreateCategory(CreateCategoryRequest categoryRequest);
         Task<UpdateCategoryResponse> UpdateCategory(Guid id, UpdateCategoryRequest categoryRequest);
-        void DeleteCategory(Guid id);
+        Task<bool> DeleteCategory(Guid id);
     }
 }

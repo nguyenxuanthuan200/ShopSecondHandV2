@@ -117,18 +117,16 @@ namespace ShopSecondHand.Controllers
         }
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
-        public IActionResult DeleteCategory(Guid id)
+        public async Task<IActionResult> DeleteCategory(Guid id)
         {
             try
             {
-                var delete = categoryRepository.GetCategoryById(id);
-                //var delete = categoryRepository.GetCategoryById(id);
-                if (delete == null)
+                Boolean check = await categoryRepository.DeleteCategory(id);
+                if (check == false)
                 {
                     return CustomResult("Not Found", HttpStatusCode.NotFound);
                 }
-                categoryRepository.DeleteCategory(id);
-                return CustomResult("Success", HttpStatusCode.OK);
+                return CustomResult("Success", check, HttpStatusCode.OK);
             }
             catch (Exception)
             {

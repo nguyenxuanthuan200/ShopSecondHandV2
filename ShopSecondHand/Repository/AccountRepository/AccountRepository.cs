@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace ShopSecondHand.Repository.AccountRepository
 {
-    public class AccountRepository :  IAccountRepository
+    public class AccountRepository : IAccountRepository
     {
         private readonly ShopSecondHandContext dbContext;
         private readonly IMapper _mapper;
@@ -115,18 +115,20 @@ namespace ShopSecondHand.Repository.AccountRepository
             await dbContext.Wallets.AddAsync(wallet);
             await dbContext.SaveChangesAsync();
             //var re =  _mapper.Map<CreateAccountResponse>(userr);
-           // var re = authenRepository.GenerateToken(userr);
+            // var re = authenRepository.GenerateToken(userr);
             return userr;
         }
-   
 
-        public async void DeleteAccount(Guid id)
+
+        public async Task<bool> DeleteAccount(Guid id)
         {
-            var delete = dbContext.Accounts
-              .SingleOrDefault(p => p.Id == id);
+            var delete = await dbContext.Accounts
+              .SingleOrDefaultAsync(p => p.Id == id);
+            if (delete == null) return false;
             delete.Status = false;
             dbContext.Accounts.Update(delete);
-           await dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
+            return true;
         }
 
         public async Task<IEnumerable<GetAccountResponse>> GetAccount()
@@ -169,7 +171,7 @@ namespace ShopSecondHand.Repository.AccountRepository
                 var hashPassword = BCrypt.Net.BCrypt.EnhancedHashPassword(userRequest.Password);
                 upUser.Password = hashPassword;
             }
-           // upUser.Password = userRequest.Password;
+            // upUser.Password = userRequest.Password;
             upUser.FullName = userRequest.FullName;
             upUser.Description = userRequest.Description;
             upUser.Phone = userRequest.Phone;
@@ -208,11 +210,11 @@ namespace ShopSecondHand.Repository.AccountRepository
             return null;
         }
 
-        public async Task<bool> AddBalanceAccount(Guid id,float money)
+        public async Task<bool> AddBalanceAccount(Guid id, float money)
         {
-            var wallet= await dbContext.Wallets.SingleOrDefaultAsync(p => p.Id == id);
-            if(wallet==null) return false;
-            if(money.Equals(null)||money==0) return false;
+            var wallet = await dbContext.Wallets.SingleOrDefaultAsync(p => p.Id == id);
+            if (wallet == null) return false;
+            if (money.Equals(null) || money == 0) return false;
             wallet.Balance = wallet.Balance + money;
             dbContext.Wallets.Update(wallet);
             await dbContext.SaveChangesAsync();

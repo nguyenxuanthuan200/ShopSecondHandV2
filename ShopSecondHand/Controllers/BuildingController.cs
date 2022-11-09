@@ -122,17 +122,17 @@ namespace ShopSecondHand.Controllers
         }
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             try
             {
-                var delete = buildingRepository.GetBuildingById(id);
-                if (delete == null)
+               
+                Boolean check = await buildingRepository.DeleteBuilding(id);
+                if (check == false)
                 {
                     return CustomResult("Not Found", HttpStatusCode.NotFound);
                 }
-                buildingRepository.DeleteBuilding(id);
-                return CustomResult("Success", HttpStatusCode.OK);
+                return CustomResult("Success", check, HttpStatusCode.OK);
             }
             catch (Exception)
             {

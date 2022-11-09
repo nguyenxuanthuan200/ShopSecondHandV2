@@ -39,13 +39,14 @@ namespace ShopSecondHand.Repository.BuildingRepository
             return re;
         }
 
-        public async void DeleteBuilding(Guid id)
+        public async Task<bool> DeleteBuilding(Guid id)
         {
             var deBuilding = await dbContext.Buildings
                 .SingleOrDefaultAsync(p => p.Id == id);
+            if(deBuilding == null) return false;
             dbContext.Buildings.Remove(deBuilding);
             await dbContext.SaveChangesAsync();
-
+            return true;
         }
         public async Task<IEnumerable<GetBuildingResponse>> GetBuilding()
 

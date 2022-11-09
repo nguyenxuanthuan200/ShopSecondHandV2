@@ -13,6 +13,6 @@ namespace ShopSecondHand.Repository.BuildingRepository
         Task<GetBuildingResponse> GetBuildingById(Guid id);
         Task<CreateBuildingResponse> CreateBuilding(CreateBuildingRequest buildingRequest);
         Task<UpdateBuildingResponse> UpdateBuilding(Guid id, UpdateBuildingRequest buildingRequest);
-        void DeleteBuilding(Guid id);
+        Task<bool> DeleteBuilding(Guid id);
     }
 }

@@ -68,13 +68,15 @@ namespace ShopSecondHand.Repository.PostRepository
             return re;
         }
 
-        public async void Delete(Guid id)
+        public async Task<bool> Delete(Guid id)
         {
-            var delete = await dbContext.Posts
-              .SingleOrDefaultAsync(p => p.Id == id);
+            var delete = await dbContext.Posts.Where(p => p.Id == id && p.Status == 1)
+               .SingleOrDefaultAsync();
+            if (delete == null) return false;
             delete.Status = 0;
             dbContext.Posts.Update(delete);
             await dbContext.SaveChangesAsync();
+            return true;
         }
 
         public async Task<PostTotalResponse> GetPost(int? page, int? pageSize)
